@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Bengal Dynasty | Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Noto+Serif+Bengali:wght@700&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      min-height: 100vh;
+      width: 100vw;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Serif Bengali', serif;
+      background: url('{% static "bg.jpg" %}') no-repeat center center fixed;
+      background-size: cover;
+      color: #212121;
+      position: relative;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.42);
+      pointer-events: none;
+    }
+    .navbar {
+      background: rgba(240, 240, 240, 0.92);
+      padding: 16px 7vw 16px 7vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #b91326;
+      position: relative;
+      z-index: 2;
+      margin-bottom: 0.5rem;
+    }
+    .navbar .title {
+      font-size: 36px;
+      font-family: 'IM Fell English SC', serif;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #b91326;
+      text-shadow: 2px 2px 7px #fff6, 0 0 2px #fff7;
+    }
+    .navbar nav a {
+      color: #212121;
+      margin-left: 36px;
+      text-decoration: none;
+      font-size: 20px;
+      transition: color 0.2s;
+      font-family: 'Noto Serif Bengali', serif;
+      text-shadow: none;
+      font-weight: bold;
+      position: relative;
+    }
+    .navbar nav a:hover {
+      color: #b91326;
+    }
+    .hero-bg {
+      width: 100vw;
+      max-width: 100%;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-top: 32px;
+      margin-bottom: 28px;
+    }
+    .hero-bg-img-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100vw;
+      min-height: 320px;
+      position: relative;
+    }
+    .hero-bg-img {
+      max-width: 430px;
+      width: 90vw;
+      height: auto;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px #0002, 0 2px 6px #b9132622;
+      filter: brightness(0.99) saturate(1.18) contrast(1.01);
+      opacity: 0.93;
+      border: 3px solid #b91326;
+    }
+    .hero-text-overlay {
+      position: absolute;
+      left: 0; right: 0; top: 0; bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero-text-overlay h1 {
+      font-size: 56px;
+      color: #b91326;
+      font-family: 'IM Fell English SC', serif;
+      letter-spacing: 4px;
+      font-weight: bold;
+      text-shadow: 2px 2px 10px #fff8, 0 0 2px #0001;
+      margin: 0 0 0 0;
+      line-height: 1.08;
+      background: rgba(255,255,255,0.42);
+      border-radius: 12px;
+      padding: 12px 36px 6px 36px;
+      border: 2px solid #b91326;
+      box-shadow: 0 2px 10px #b9132622;
+    }
+    .hero-msg {
+      margin-top: 16px;
+      margin-bottom: 0;
+      font-size: 21px;
+      color: #212121;
+      font-family: 'Noto Serif Bengali', serif;
+      text-shadow: 1px 1px 6px #fff6;
+      font-weight: 600;
+    }
+    .hero-icons {
+      font-size: 27px;
+      margin: 8px 0 8px 0;
+      text-shadow: 1px 1px 5px #fff8;
+      color: #b91326;
+    }
+    .hero-btns {
+      margin-top: 15px;
+      margin-bottom: 0;
+    }
+    .hero-btns a {
+      font-size: 18px;
+      margin: 0 10px;
+      padding: 11px 22px;
+      color: #fff;
+      background-color: #b91326;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: 'Noto Serif Bengali', serif;
+      box-shadow: 0 2px 7px #0002;
+      border: 2px solid #b91326;
+      font-weight: bold;
+      transition: background 0.3s, color 0.3s, border 0.3s;
+      outline: none;
+    }
+    .hero-btns a:hover {
+      background-color: #fff;
+      color: #b91326;
+      border: 2px solid #b91326;
+    }
+    .register-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 0 auto 27px auto;
+      max-width: 900px;
+      gap: 24px;
+      flex-wrap: wrap;
+      background: rgba(255,255,255,0.82);
+      border-radius: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+      padding: 24px 16px 18px 16px;
+      position: relative;
+      z-index: 2;
+    }
+    .register-form {
+      background: #f9f5f6;
+      border-radius: 14px;
+      padding: 26px 18px 18px 18px;
+      min-width: 260px;
+      max-width: 310px;
+      width: 100%;
+      box-shadow: 0 2px 8px #b9132611;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      border: 1.7px solid #b9132612;
+    }
+    .register-form h2 {
+      color: #b91326;
+      font-size: 1.45rem;
+      margin-bottom: 11px;
+      font-weight: 700;
+      text-align: center;
+      font-family: 'IM Fell English SC', serif;
+      letter-spacing: 2.2px;
+      text-shadow: 1px 1px 4px #fff7;
+    }
+    .register-form label {
+      font-size: 15px;
+      color: #b91326;
+      margin-bottom: 2px;
+      text-align: left;
+      font-family: 'Noto Serif Bengali', serif;
+      font-weight: 600;
+    }
+    .register-form input[type="text"],
+    .register-form input[type="email"],
+    .register-form input[type="password"] {
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1.5px solid #b91326;
+      font-size: 15px;
+      background: #fafafa;
+      color: #212121;
+      outline: none;
+      font-family: 'Noto Serif Bengali', serif;
+      transition: box-shadow 0.2s, border 0.2s;
+      box-shadow: 0 1.5px 6px #b913260d;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .register-form input[type="text"]:focus,
+    .register-form input[type="email"]:focus,
+    .register-form input[type="password"]:focus {
+      box-shadow: 0 0 7px #b9132633;
+      border: 1.7px solid #b91326;
+      background: #fff;
+    }
+    .register-form button {
+      padding: 10px 0;
+      font-size: 17px;
+      background: linear-gradient(90deg, #b91326, #e0c77a);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-weight: bold;
+      font-family: 'IM Fell English SC', serif;
+      letter-spacing: 1.3px;
+      cursor: pointer;
+      margin-top: 7px;
+      margin-bottom: 4px;
+      transition: background 0.2s, color 0.2s;
+      box-shadow: 0 2px 8px #b9132615;
+    }
+    .register-form button:hover {
+      background: linear-gradient(90deg, #fff, #b91326 90%);
+      color: #b91326;
+    }
+    .register-form .note {
+      color: #b91326;
+      font-size: 12px;
+      margin-top: 9px;
+      text-align: center;
+      font-family: 'Noto Serif Bengali', serif;
+    }
+    .social-section {
+      background: #f9f5f6;
+      border-radius: 14px;
+      padding: 26px 14px 10px 14px;
+      min-width: 210px;
+      max-width: 220px;
+      width: 100%;
+      box-shadow: 0 2px 8px #b9132611;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 13px;
+      border: 1.7px solid #b9132612;
+    }
+    .social-section button {
+      padding: 10px 0;
+      font-size: 15px;
+      border: none;
+      border-radius: 7px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 3px;
+      font-family: 'IM Fell English SC', serif;
+      transition: background 0.2s, color 0.2s;
+    }
+    .social-section .facebook { background: #1877f2; color: #fff; }
+    .social-section .facebook:hover { background: #145cc1; }
+    .social-section .google { background: #fff; color: #b91326; border: 1.5px solid #b91326;}
+    .social-section .google:hover { background: #f3d6d6; }
+    .social-section .apple { background: #000; color: #fff; }
+    .social-section .apple:hover { background: #222; }
+    .social-section .divider {
+      text-align: center;
+      color: #b91326;
+      margin: 8px 0 5px 0;
+      font-size: 13px;
+      opacity: 0.7;
+      font-family: 'IM Fell English SC', serif;
+    }
+    .social-section a {
+      color: #b91326 !important;
+      text-decoration:underline;
+      font-size:15px;
+      text-align:center;
+    }
+    .social-section a:hover {
+      color: #1877f2 !important;
+    }
+    @media (max-width: 900px) {
+      .register-section { flex-direction: column; align-items: center; }
+      .register-form, .social-section { max-width: 98vw; }
+    }
+    .mission {
+      text-align: center;
+      padding: 22px 12px 22px 12px;
+      background-color: rgba(185,19,38,0.13);
+      font-size: 19px;
+      line-height: 1.8;
+      max-width: 650px;
+      margin: 0 auto 36px auto;
+      border-radius: 10px;
+      animation: fadeIn 3s;
+      margin-top: 18px;
+      color: #212121;
+      font-family: 'Noto Serif Bengali', serif;
+      border: 1.3px solid #b9132633;
+    }
+    .mission strong {
+      color: #fff;
+      background: #b91326;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 21px;
+      font-family: 'IM Fell English SC', serif;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+    .footer {
+      text-align: center;
+      padding: 18px 0 8px 0;
+      color: #b91326;
+      font-size: 15px;
+      font-family: 'IM Fell English SC', serif;
+      text-shadow: 1px 1px 6px #fff8;
+    }
+    .footer img {
+      height: 28px; vertical-align: middle; margin: 0 4px; border-radius: 7px;
+      border: 1.5px solid #b91326;
+      box-shadow: 0 1px 8px #0006;
+    }
+  </style>
+</head>
+<body>
+<div class="navbar">
+  <span class="title">Bengal Dynasty</span>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/login">প্রবেশ</a>
+    <a href="/register">নিবন্ধন</a>
+    <a href="#mission">Our Mission</a>
+  </nav>
+</div>
+<div class="hero-bg">
+  <div class="hero-bg-img-wrap">
+    <img src="{% static 'bg.jpg' %}" class="hero-bg-img" alt="Bengal Dynasty Playing Cards"/>
+    <div class="hero-text-overlay">
+      <h1>Bengal Dynasty</h1>
+    </div>
+  </div>
+  <div class="hero-msg">
+    Here you will find a touch of the lost heritage of Bengal.
+  </div>
+  <div class="hero-btns">
+    <a href="/login">প্রবেশ করুন</a>
+    <a href="/register">নিবন্ধন করুন</a>
+  </div>
+</div>
+<div class="register-section">
+  <form class="register-form" method="post">
+    <h2>Create an Account</h2>
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" placeholder="e.g. yourname" required>
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="e.g. your@email.com" required>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" required>
+    <label for="confirm-password">Confirm Password</label>
+    <input type="password" id="confirm-password" name="confirm_password" required>
+    <button type="submit">Submit & Register</button>
+    <div class="note">Note: Your personal data will be used to support your experience throughout this website and for other purposes described in our privacy policy.</div>
+  </form>
+  <div class="social-section">
+    <button class="facebook" type="button">Continue with Facebook</button>
+    <button class="google" type="button">Continue with Google</button>
+    <button class="apple" type="button">Continue with Apple</button>
+    <div class="divider">or</div>
+    <a href="/login">Already have an account? Login</a>
+  </div>
+</div>
+<div class="mission" id="mission">
+  বাংলার ঐতিহ্য, কারুকার্য আর সংস্কৃতির গৌরবময় অধ্যায়গুলো তুলে ধরাই আমাদের মূল লক্ষ্য।<br>
+  <strong>“বাঙালির গর্ব, শিল্পের ছোঁয়া।”</strong><br>
+  আমাদের সাথে একত্রে হারানো সৌন্দর্যকে আবার জীবন্ত করে তুলি।
+</div>
+<div class="footer">
+  <span>&copy; 2025 Bengal Dynasty | Crafted with pride in Bengali heritage.</span>
+  <br>
+  <img src="{% static 'bg.jpg' %}" alt="Bengal Dynasty Card Box"/>
+</div>
+</body>
+</html>
