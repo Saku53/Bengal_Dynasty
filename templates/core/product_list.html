@@ -1,0 +1,539 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products - Bengal Dynasty</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f9fafc 0%, #ecf0ff 100%);
+            margin: 0;
+            min-height: 100vh;
+        }
+        .navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 48px 10px 28px;
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 6px 24px #7b6cff22;
+            box-sizing: border-box;
+            min-height: 84px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(4px);
+        }
+        .navbar .logo {
+            height: 68px;
+            width: 68px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-right: 28px;
+            box-shadow: 0 6px 24px #7b6cff26, 0 1.5px 4px #fff7;
+            border: 2.5px solid #e0e3ff;
+            background: #fff;
+        }
+        .navbar .nav-links {
+            flex: 1 1 auto;
+            display: flex;
+            gap: 52px;
+            align-items: center;
+            justify-content: center;
+        }
+        .navbar .nav-links a {
+            color: #2a2460;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 1.36rem;
+            letter-spacing: 1px;
+            transition: color .16s, text-shadow .18s, transform .18s;
+            text-shadow: 0 2px 12px #726cff1c;
+            position: relative;
+        }
+        .navbar .nav-links a:hover {
+            color: #8d4fff;
+            text-shadow: 0 2px 16px #a095ff3a,0 1px 0 #fff;
+            transform: scale(1.09) translateY(-2px) perspective(80px) rotateX(7deg);
+        }
+        .navbar-popout-search {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-left: 32px;
+        }
+        .navbar-popout-search .icon-svg {
+            width: 34px;
+            height: 34px;
+            stroke: #7b6cff;
+            opacity: 0.82;
+            cursor: pointer;
+            background: none;
+            transition: stroke .22s, opacity .22s, filter .22s, transform .22s;
+            display: block;
+            filter: drop-shadow(0 2px 10px #7b6cff1b);
+        }
+        .navbar-popout-search .icon-svg:hover {
+            stroke: #ff5ef5;
+            opacity: 1;
+            filter: drop-shadow(0 4px 16px #ff5ef566);
+            transform: scale(1.12) rotateZ(-6deg);
+        }
+        .navbar-popout-searchbox {
+            display: none;
+            position: absolute;
+            top: 38px;
+            right: -16px;
+            z-index: 1000;
+            min-width: 340px;
+            box-shadow: 0 8px 36px #726cff33, 0 1.5px 4px #fff9;
+            background: linear-gradient(135deg, #fff 0%, #e7ecff 100%);
+            border-radius: 18px;
+            padding: 30px 26px 24px 26px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .20s cubic-bezier(.65,0,.35,1);
+            border-top: 2.5px solid #b7acff;
+        }
+        .navbar-popout-searchbox.active {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+            animation: fadeInPop .33s cubic-bezier(.63,-0.16,.32,1.11);
+        }
+        @keyframes fadeInPop {
+            0% { opacity: 0; transform: translateY(25px) scale(.98);}
+            80% { opacity: 1; }
+            100% { opacity: 1; transform: translateY(0) scale(1);}
+        }
+        .navbar-popout-search-form {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .navbar-popout-search-input {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.13rem;
+            padding: 15px 52px 15px 22px;
+            border-radius: 10px;
+            border: 1.9px solid #d2cfff;
+            background: #f8f8ff;
+            outline: none;
+            width: 230px;
+            min-width: 0;
+            transition: box-shadow .23s, border .17s, background .17s;
+            box-shadow: 0 4px 28px #b9b6ff22;
+            color: #2a2460;
+        }
+        .navbar-popout-search-input:focus {
+            border: 2.2px solid #7b6cff;
+            background: #fff;
+            box-shadow: 0 6px 30px #b9b6ff33, 0 2px 2px #fff9;
+        }
+        .navbar-popout-search-btn {
+            position: absolute;
+            right: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #7b6cff 0%, #ff5ef5 100%);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            outline: none;
+            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px #7b6cff42;
+        }
+        .navbar-popout-search-btn svg {
+            stroke: #fff;
+            width: 22px;
+            height: 22px;
+            opacity: 0.92;
+            transition: stroke .16s, opacity .16s;
+        }
+        .navbar-popout-search-btn:hover svg {
+            stroke: #fff;
+            opacity: 1;
+        }
+        .main-wrapper {
+            display: flex;
+            gap: 38px;
+            max-width: 1600px;
+            margin: 48px auto 0 auto;
+            padding: 0 40px 48px 40px;
+            min-height: 80vh;
+            box-sizing: border-box;
+        }
+        .filter-sidebar {
+            background: linear-gradient(135deg, #f3f6ff 60%, #e1e0f7 100%);
+            border-radius: 22px;
+            box-shadow: 0 6px 24px #7b6cff17, 0 1.5px 4px #fff7;
+            padding: 40px 30px 32px 30px;
+            min-width: 260px;
+            max-width: 350px;
+            font-size: 1.09rem;
+            border: 1.5px solid #e0e3ff;
+            backdrop-filter: blur(3px);
+        }
+        .filter-title {
+            font-size: 1.32rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #7b6cff;
+            letter-spacing: 1.2px;
+            text-shadow: 0 1px 10px #b9b6ff3a;
+        }
+        .filter-category-list {
+            padding: 0;
+            margin: 0 0 0 8px;
+            list-style: none;
+        }
+        .filter-category-list li {
+            margin: 8px 0 5px 0;
+            line-height: 1.7;
+            transition: transform .13s;
+        }
+        .filter-category-list a,
+        .filter-category-list strong {
+            color: #2a2460;
+            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: .21px;
+            transition: color .13s, text-shadow .15s;
+            font-size: 1.01rem;
+            text-shadow: 0 1px 8px #726cff0a;
+        }
+        .filter-category-list a:hover {
+            color: #ff5ef5;
+            text-shadow: 0 2px 10px #ff5ef522;
+        }
+        .filter-category-list strong {
+            color: #ff5ef5;
+            font-weight: 700;
+            text-shadow: 0 1px 8px #ff5ef522;
+        }
+        .product-section {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .results-count {
+            font-size: 1.13rem;
+            font-weight: 500;
+            color: #7b6cff;
+            margin-bottom: 6px;
+            margin-top: 12px;
+            margin-left: 8px;
+            letter-spacing: .22px;
+            text-shadow: 0 1px 10px #b9b6ff33;
+        }
+        .product-results {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-top: 24px;
+        }
+        .product-card {
+            background: linear-gradient(135deg, #fff 60%, #e6eaff 100%);
+            border-radius: 22px;
+            box-shadow: 0 8px 40px #7b6cff36, 0 2px 10px #fff9;
+            padding: 24px 24px 16px 24px;
+            width: 325px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow .23s, transform .22s;
+            position: relative;
+            will-change: transform;
+            perspective: 900px;
+            transform-style: preserve-3d;
+            overflow: visible;
+        }
+        .product-card:hover {
+            box-shadow: 0 16px 52px #7b6cff4a, 0 8px 16px #ff5ef522;
+            transform: translateY(-10px) scale(1.045) rotateY(var(--rotateY,0deg)) rotateX(var(--rotateX,0deg));
+            z-index: 2;
+        }
+        .product-card img {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px #7b6cff33, 0 2px 8px #fff9;
+            margin-bottom: 20px;
+            background: #f3f3f3;
+            transition: transform .22s;
+        }
+        .product-card:hover img {
+            transform: scale(1.04) rotateZ(-2deg);
+            box-shadow: 0 12px 32px #ff5ef533, 0 4px 16px #fff;
+        }
+        .product-title {
+            font-size: 1.23rem;
+            font-weight: 700;
+            color: #2a2460;
+            margin-bottom: 9px;
+            text-align: center;
+            letter-spacing: .2px;
+            min-height: 48px;
+            text-shadow: 0 2px 20px #7b6cff1c;
+        }
+        .product-title a {
+            color: #2a2460;
+            text-decoration: none;
+            transition: color .19s, text-shadow .18s;
+        }
+        .product-title a:hover {
+            color: #ff5ef5;
+            text-shadow: 0 2px 16px #ff5ef533;
+        }
+        .product-price {
+            color: #7b6cff;
+            font-size: 1.21rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: .5px;
+            text-shadow: 0 2px 10px #7b6cff2a;
+        }
+        .product-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .product-form input[type="number"] {
+            width: 48px;
+            height: 36px;
+            border: 1.7px solid #d2cfff;
+            border-radius: 6px;
+            font-size: 1.13rem;
+            font-family: inherit;
+            background: #f8f8ff;
+            color: #2a2460;
+            text-align: center;
+            margin-right: 8px;
+        }
+        .product-form button {
+            background: linear-gradient(135deg, #7b6cff 0%, #ff5ef5 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.11rem;
+            padding: 10px 32px;
+            cursor: pointer;
+            transition: background .18s, color .18s, box-shadow .19s, transform .21s;
+            box-shadow: 0 4px 16px #7b6cff3e, 0 2px 4px #fff7;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            outline: none;
+            position: relative;
+        }
+        .product-form button:hover {
+            background: linear-gradient(135deg, #ff5ef5 0%, #7b6cff 100%);
+            color: #fff;
+            box-shadow: 0 9px 32px #ff5ef55c, 0 2px 8px #fff7;
+            transform: scale(1.07) translateY(-2px);
+        }
+        .product-form button svg {
+            stroke: #fff;
+            transition: stroke .18s;
+        }
+        .bg-3d-shapes {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .bg-3d-shapes span {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.28;
+            filter: blur(0.5px);
+            animation: float3d 18s linear infinite alternate;
+        }
+        .bg-3d-shapes .shape1 { width: 320px; height: 320px; background: radial-gradient(circle,#7b6cff 0%,#ff5ef5 100%); left: 5%; top: 20%; animation-delay: 0s;}
+        .bg-3d-shapes .shape2 { width: 180px; height: 180px; background: radial-gradient(circle,#ff5ef5 10%,#fff 100%); right: 7%; top: 55%; animation-delay: 4s;}
+        .bg-3d-shapes .shape3 { width: 120px; height: 120px; background: radial-gradient(circle,#fff 10%,#7b6cff 100%); left: 60%; top: 70%; animation-delay: 8s;}
+        @keyframes float3d {
+            from { transform: translateY(0px) scale(1) rotateZ(0deg);}
+            50%  { transform: translateY(-80px) scale(1.13) rotateZ(8deg);}
+            to   { transform: translateY(50px) scale(1.09) rotateZ(-6deg);}
+        }
+        @media (max-width: 1200px) {
+            .main-wrapper { flex-direction: column; gap: 0; padding: 0 3vw; }
+            .filter-sidebar { margin-bottom: 24px; }
+            .product-card { width: 98vw; max-width: 370px; }
+        }
+        @media (max-width: 900px) {
+            .navbar { flex-direction: column; gap: 19px; }
+            .main-wrapper { padding: 0 2vw; }
+            .product-card { max-width: 99vw; }
+            .bg-3d-shapes .shape1, .bg-3d-shapes .shape2, .bg-3d-shapes .shape3 { width: 120px; height: 120px;}
+        }
+        @media (max-width: 600px) {
+            .navbar .nav-links { gap: 20px; font-size: 1.1rem;}
+            .bg-3d-shapes { display: none; }
+        }
+    </style>
+</head>
+<body>
+<!-- 3D Glowing Background -->
+<div class="bg-3d-shapes">
+    <span class="shape1"></span>
+    <span class="shape2"></span>
+    <span class="shape3"></span>
+</div>
+<!-- Custom Navbar with Popout Search -->
+<div class="navbar">
+    <img class="logo" src="{% static 'core/logo.png' %}" alt="Company Logo">
+    <div class="nav-links">
+        <a href="{% url 'product_list' %}?category=women">WOMEN</a>
+        <a href="{% url 'product_list' %}?category=men">MEN</a>
+        <a href="{% url 'product_list' %}?category=kids">KIDS</a>
+        <a href="{% url 'product_list' %}?category=home-decor">HOME DÉCOR</a>
+        <a href="{% url 'product_list' %}?category=jewellery">JEWELLERY</a>
+        <a href="{% url 'product_list' %}?category=gifts-crafts">GIFTS & CRAFTS</a>
+    </div>
+    <!-- Popout Search Icon and Box -->
+    <div class="navbar-popout-search" id="navbar-popout-search">
+        <svg class="icon-svg" id="popout-search-icon" viewBox="0 0 32 32" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" tabindex="0">
+            <circle cx="15" cy="15" r="8" stroke="#7b6cff"/>
+            <line x1="21.5" y1="21.5" x2="28" y2="28" stroke="#7b6cff"/>
+        </svg>
+        <div class="navbar-popout-searchbox" id="navbar-popout-searchbox">
+            <form class="navbar-popout-search-form" method="get" action="{% url 'product_list' %}">
+                <input class="navbar-popout-search-input" type="text" name="q" placeholder="Search entire store here..." value="{{ query|default:'' }}" autocomplete="off">
+                <button class="navbar-popout-search-btn" type="submit" title="Search">
+                    <svg fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 28 28">
+                        <circle cx="12" cy="12" r="8" stroke="#fff"/>
+                        <line x1="19" y1="19" x2="26" y2="26" stroke="#fff"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+    <div class="icons">
+        <a href="{% url 'user_profile' %}" title="Profile">
+          <svg class="icon-svg" viewBox="0 0 32 32" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="16" cy="12" r="6" stroke="#7b6cff"/>
+              <path d="M6 27c0-4.5 5-8 10-8s10 3.5 10 8" stroke="#7b6cff"/>
+          </svg>
+        </a>
+        <a href="{% url 'favorite_list' %}" title="Favorites">
+          <svg class="icon-svg" viewBox="0 0 32 32" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 27s-8-5.7-10-10c-2.5-5.2 2.1-10 7-10 2.2 0 4.1 1.3 5 3.2C19.9 8.3 21.8 7 24 7c4.9 0 9.5 4.8 7 10-2 4.3-10 10-10 10z" stroke="#ff5ef5"/>
+          </svg>
+        </a>
+        <a href="{% url 'cart_detail' %}" title="Cart">
+          <svg class="icon-svg" viewBox="0 0 32 32" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="6" y="11" width="20" height="15" rx="3" stroke="#7b6cff"/>
+              <path d="M11 11V8a5 5 0 0 1 10 0v3" stroke="#7b6cff"/>
+          </svg>
+        </a>
+    </div>
+</div>
+<script>
+    // 3D Parallax card tilting
+    document.addEventListener("DOMContentLoaded", function(){
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+                card.style.setProperty('--rotateY', `${x/12}deg`);
+                card.style.setProperty('--rotateX', `${-y/15}deg`);
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--rotateY', '0deg');
+                card.style.setProperty('--rotateX', '0deg');
+            });
+        });
+    });
+    // Popout search box on hover/focus for search icon or search box
+    const popSearchIcon = document.getElementById('popout-search-icon');
+    const popSearchBox = document.getElementById('navbar-popout-searchbox');
+    let popSearchTimeout;
+    function showPopSearch() {
+        clearTimeout(popSearchTimeout);
+        popSearchBox.classList.add('active');
+        setTimeout(() => {
+            const input = popSearchBox.querySelector('input');
+            if(input) input.focus();
+        }, 80);
+    }
+    function hidePopSearch() {
+        popSearchTimeout = setTimeout(() => {
+            popSearchBox.classList.remove('active');
+        }, 140);
+    }
+    popSearchIcon.addEventListener('mouseenter', showPopSearch);
+    popSearchIcon.addEventListener('focus', showPopSearch);
+    popSearchBox.addEventListener('mouseenter', showPopSearch);
+    popSearchIcon.addEventListener('mouseleave', hidePopSearch);
+    popSearchBox.addEventListener('mouseleave', hidePopSearch);
+    popSearchBox.querySelector('input').addEventListener('keydown', function(e) {
+        if(e.key === "Escape") {
+            popSearchBox.classList.remove('active');
+            popSearchIcon.blur();
+        }
+    });
+</script>
+<div class="main-wrapper">
+    <aside class="filter-sidebar">
+        <div class="filter-title">FILTERS</div>
+        <div style="font-weight:700;margin-bottom:15px;color:#7b6cff;text-shadow:0 1px 10px #b9b6ff3a;">CATEGORIES</div>
+        <ul class="filter-category-list">
+            {% for category in categories %}
+                <li>
+                    {% if selected_category and selected_category.id == category.id %}
+                        <strong>{{ category.name|upper }}</strong>
+                    {% else %}
+                        <a href="?category={{ category.slug }}">{{ category.name|upper }}</a>
+                    {% endif %}
+                    {% if category.children.all %}
+                        <ul style="margin-left:16px">
+                        {% for child in category.children.all %}
+                            <li>
+                                <a href="?category={{ child.slug }}">{{ child.name }}</a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <section class="product-section">
+        <div class="results-count">{{ products|length }} RESULTS</div>
+        <div class="product-results">
+            {% for product in products %}
+            <div class="product-card">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                <div class="product-title">
+                    <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
+                </div>
+                <div class="product-price">Tk {{ product.price|floatformat:2 }}</div>
+                <form method="post" action="{% url 'add_to_cart' product.pk %}" class="product-form">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
+                    <button type="submit">
+                        <svg width="19" height="19" style="vertical-align:middle;margin-right:5px" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="4.5" width="13.4" height="9.8" rx="2.2"/><path d="M6 4.5V3.3a3.4 3.4 0 0 1 6.8 0v1.2"/></svg>
+                        Add
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+</body>
+</html>

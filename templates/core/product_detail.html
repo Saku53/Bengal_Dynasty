@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product.name }}</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'core/shop.css' %}">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #fafbfc; }
+        .product-detail-container {
+            display: flex;
+            min-height: 80vh;
+            margin: 0 auto;
+            max-width: 1200px;
+            align-items: flex-start;
+            padding: 2rem 0;
+        }
+        .product-image-area {
+            flex: 1.1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .product-image-area img {
+            max-width: 90%;
+            max-height: 75vh;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #0001;
+            background: #fff;
+        }
+        .product-info-area {
+            flex: 1;
+            padding-left: 3rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            color: #222;
+            margin-bottom: 1.5rem;
+        }
+        .quantity-row {
+            margin-bottom: 1.5rem;
+        }
+        .qty-label { font-size: 1rem; font-weight: 500; margin-bottom: .5rem; }
+        .qty-controls {
+            display: flex;
+            align-items: center;
+        }
+        .qty-btn {
+            width: 36px;
+            height: 36px;
+            font-size: 1.5rem;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            cursor: pointer;
+            color: #ff6600; /* Always visible orange */
+            transition: background .2s, border .2s, color .2s;
+        }
+        .qty-btn:active {
+            background: #ffe4d2;
+        }
+        .qty-input {
+            width: 60px;
+            height: 36px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 0 8px;
+            border-radius: 0;
+        }
+        .product-meta {
+            border-top: 1px solid #ddd;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .meta-row {
+            font-size: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .meta-row:last-child { border-bottom: none; }
+        .add-actions-row {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .bag-btn {
+            background: #111;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 0;
+            padding: 0.9rem 0;
+            width: 310px;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: background .2s;
+        }
+        .bag-btn:hover { background: #ff6600; }
+        .icon-btn {
+            background: #fff;
+            border: 1px solid #bbb;
+            width: 46px;
+            height: 46px;
+            font-size: 1.5rem;
+            border-radius: 0;
+            cursor: pointer;
+            color: #e0245e; /* Heart color always visible */
+            transition: border .2s, color .2s;
+        }
+        .icon-btn.active, .icon-btn:hover { border-color: #ff6600; color: #ff6600; }
+        .icon-btn[title="Share"] { color: #333; } /* Share icon default color */
+        @media (max-width: 900px) {
+            .product-detail-container { flex-direction: column; }
+            .product-info-area { padding-left: 0; padding-top: 2rem;}
+            .bag-btn { width: 100%; }
+        }
+    </style>
+    <script>
+        function updateQty(delta) {
+            let input = document.getElementById('qty-input');
+            let value = parseInt(input.value) || 1;
+            let min = parseInt(input.min) || 1;
+            let max = parseInt(input.max) || 99;
+            value = value + delta;
+            if (value < min) value = min;
+            if (value > max) value = max;
+            input.value = value;
+        }
+    </script>
+</head>
+<body>
+    <div class="product-detail-container">
+        <div class="product-image-area">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        </div>
+        <div class="product-info-area">
+            <div class="product-title">{{ product.name }}</div>
+            <div class="product-price">Tk {{ product.price }}</div>
+            <form method="post" action="{% url 'add_to_cart' product.id %}">
+                {% csrf_token %}
+                <div class="quantity-row">
+                    <div class="qty-label">Quantity</div>
+                    <div class="qty-controls">
+                        <button type="button" class="qty-btn" onclick="updateQty(-1)">&#8211;</button>
+                        <input id="qty-input" class="qty-input" type="number" name="quantity" min="1" max="{{ product.stock }}" value="1">
+                        <button type="button" class="qty-btn" onclick="updateQty(1)">&#43;</button>
+                    </div>
+                </div>
+                <div class="add-actions-row">
+                    <button type="submit" class="bag-btn">ADD TO BAG</button>
+                    {% if user.is_authenticated %}
+                        {% if user_fav %}
+                            <form method="post" action="{% url 'remove_favorite' product.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="icon-btn active" title="Remove from wishlist">&#10084;</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'add_favorite' product.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="icon-btn" title="Add to wishlist">&#10084;</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    <button type="button" class="icon-btn" title="Share">&#x1f517;</button>
+                </div>
+            </form>
+            <div class="product-meta">
+                <div class="meta-row">
+                    <span>Product Code</span>
+                    <span>{{ product.id }}</span>
+                </div>
+                <div class="meta-row">
+                    <span>Product Description</span>
+                    <span style="color:#ff6600;">&#8250;</span>
+                </div>
+                <div class="meta-row">
+                    <span>Reviews</span>
+                    <span style="color:#ff6600;">&#8250;</span>
+                </div>
+            </div>
+            <div style="margin-top:2rem; font-size:1.05rem; color:#222;">
+                FIND IN STORE
+            </div>
+        </div>
+    </div>
+</body>
+</html>

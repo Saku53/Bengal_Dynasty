@@ -1,0 +1,17 @@
+<li>
+    <a href="?category={{ category.id }}"
+       {% if selected_category and category.id == selected_category.id %}class="selected"{% endif %}>
+        {% if not category.parent %}
+            {{ category.name|upper }}
+        {% else %}
+            {{ category.name }}
+        {% endif %}
+    </a>
+    {% if category.children.all %}
+        <ul>
+            {% for child in category.children.all %}
+                {% include "core/category_tree.html" with category=child selected_category=selected_category %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+</li>
